@@ -1,10 +1,10 @@
-# SudoLogic — Premium Puzzle Platform
+# SudoLogic - Premium Puzzle Platform
 
-A modern multi-page SudoLogic web app built with Next.js 15, TypeScript, Tailwind CSS, and the App Router.
+A modern multi page SudoLogic web app built with Next.js 15, TypeScript, Tailwind CSS, and the App Router.
 
 ## What is SudoLogic?
 
-SudoLogic is a premium Sudoku platform for puzzle lovers who want more than a basic game. It combines classic Sudoku gameplay with modern design, AI-powered coaching, and daily challenges — all in one place.
+SudoLogic is a premium Sudoku platform for puzzle lovers who want more than a basic game. It combines classic Sudoku gameplay with modern design, AI-powered coaching, and daily challenges  all in one place.
 
 ## Who is it for?
 
