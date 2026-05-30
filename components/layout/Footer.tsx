@@ -15,7 +15,7 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="text-center sm:text-left">
             <Link href="/" className="text-lg font-bold gradient-text">
-              Sudoku
+              SudoLogic
             </Link>
             <p className="text-sm text-themed-muted mt-1">
               Premium puzzles. Zero friction.
@@ -39,7 +39,7 @@ export function Footer() {
 
         <div className="mt-8 pt-6 border-t border-[color:var(--color-glass-border)] text-center">
           <p className="text-xs text-themed-muted">
-            © {year} Sudoku. All rights reserved.
+            © {year} SudoLogic. All rights reserved.
           </p>
         </div>
       </div>

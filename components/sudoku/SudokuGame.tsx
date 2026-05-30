@@ -3,19 +3,26 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSudokuGame } from "@/hooks/useSudokuGame";
 import { useTimer } from "@/hooks/useTimer";
-import { DIFFICULTY_LABELS } from "@/lib/sudoku";
-import type { CellValue, Puzzle } from "@/lib/sudoku";
-import { GameHeader } from "./GameHeader";
+import { DIFFICULTY_LABELS, type Board } from "@/lib/sudoku";
+import type { CellValue, Puzzle } from "@/lib/sudoku";import { Button } from "@/components/ui/Button";import { GameHeader } from "./GameHeader";
 import { SudokuBoard } from "./SudokuBoard";
 import { NumberPad } from "./NumberPad";
 import { WinModal } from "./WinModal";
-import { AICoach } from "./AICoach";
 
 interface SudokuGameProps {
   initialPuzzle?: Puzzle;
   mode?: "classic" | "daily";
   dailyLabel?: string;
 }
+
+type Notes = Record<string, Set<number>>;
+
+interface HistoryEntry {
+  board: Board;
+  notes: Notes;
+}
+
+const MAX_HINTS = 3;
 
 export function SudokuGame({
   initialPuzzle,
@@ -25,8 +32,8 @@ export function SudokuGame({
   const {
     difficulty,
     current,
-    solution,
     given,
+    solution,
     selected,
     mistakes,
     isWon,
@@ -40,15 +47,138 @@ export function SudokuGame({
     selectCell,
     setCellValue,
     clearCell,
+    clearBoard,
+    restoreCurrentBoard,
     dismissWinModal,
     getCellStatus,
   } = useSudokuGame();
 
-  const [showAICoach, setShowAICoach] = useState(false);
-
   const timerActive = hasStarted && !isWon;
   const { formatted, reset: resetTimer, pause } = useTimer(timerActive);
   const isDaily = mode === "daily";
+
+  // Notes mode
+  const [notesMode, setNotesMode] = useState(false);
+  const [notes, setNotes] = useState<Notes>({});
+
+  // Undo history
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+
+  // Hints
+  const [hintsLeft, setHintsLeft] = useState(MAX_HINTS);
+
+  // Save to history before each move
+  const saveHistory = useCallback(() => {
+    setHistory((prev) => [
+      ...prev.slice(-49), // keep max 50 states
+      {
+        board: current.map((row) => [...row]),
+        notes: Object.fromEntries(
+          Object.entries(notes).map(([k, v]) => [k, new Set(v)])
+        ),
+      },
+    ]);
+  }, [current, notes]);
+
+  // Undo
+  const handleUndo = useCallback(() => {
+    if (history.length === 0) return;
+    const prev = history[history.length - 1];
+    setHistory((h) => h.slice(0, -1));
+    restoreCurrentBoard(prev.board);
+    setNotes(
+      Object.fromEntries(
+        Object.entries(prev.notes).map(([k, v]) => [k, new Set(v)])
+      )
+    );
+  }, [history, restoreCurrentBoard]);
+
+  const handleClearBoard = useCallback(() => {
+    saveHistory();
+    clearBoard();
+    setNotes({});
+  }, [saveHistory, clearBoard]);
+
+  // Notes input
+  const handleNotesInput = useCallback(
+    (value: CellValue) => {
+      if (!selected) return;
+      if (given[selected.row][selected.col]) return;
+      const key = `${selected.row}-${selected.col}`;
+      setNotes((prev) => {
+        const existing = new Set(prev[key] ?? []);
+        if (existing.has(value)) {
+          existing.delete(value);
+        } else {
+          existing.add(value);
+        }
+        return { ...prev, [key]: existing };
+      });
+    },
+    [selected, given]
+  );
+
+  // Hint
+  const handleHint = useCallback(() => {
+    if (!selected || hintsLeft <= 0 || isWon) return;
+    if (given[selected.row][selected.col]) return;
+    if (!solution) return;
+    const correct = solution[selected.row][selected.col];
+    if (!correct) return;
+    saveHistory();
+    const accepted = setCellValue(correct as CellValue);
+    if (!accepted) return;
+    const key = `${selected.row}-${selected.col}`;
+    setNotes((prev) => {
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+    setHintsLeft((h) => h - 1);
+  }, [selected, hintsLeft, isWon, given, solution, saveHistory, setCellValue]);
+
+  // Wrapped setCellValue that saves history and clears notes
+  const handleInput = useCallback(
+    (value: CellValue) => {
+      if (notesMode) {
+        handleNotesInput(value);
+        return;
+      }
+      if (selected) {
+        saveHistory();
+        const key = `${selected.row}-${selected.col}`;
+        setNotes((prev) => {
+          const next = { ...prev };
+          delete next[key];
+          return next;
+        });
+        setCellValue(value);
+      }
+    },
+    [notesMode, handleNotesInput, saveHistory, selected, setCellValue]
+  );
+
+  // Wrapped clearCell
+  const handleClear = useCallback(() => {
+    saveHistory();
+    if (selected) {
+      const key = `${selected.row}-${selected.col}`;
+      setNotes((prev) => {
+        const next = { ...prev };
+        delete next[key];
+        return next;
+      });
+    }
+    clearCell();
+  }, [saveHistory, selected, clearCell]);
+
+  // Reset on new game
+  useEffect(() => {
+    setNotes({});
+    setHistory([]);
+    setHintsLeft(MAX_HINTS);
+    setNotesMode(false);
+  }, [gameKey]);
 
   useEffect(() => {
     if (initialPuzzle) {
@@ -85,12 +215,11 @@ export function SudokuGame({
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!selected || isWon) return;
-
       const key = e.key;
       if (key >= "1" && key <= "9") {
-        setCellValue(parseInt(key, 10) as CellValue);
+        handleInput(parseInt(key, 10) as CellValue);
       } else if (key === "Backspace" || key === "Delete" || key === "0") {
-        clearCell();
+        handleClear();
       } else if (key === "ArrowUp" && selected.row > 0) {
         selectCell(selected.row - 1, selected.col);
       } else if (key === "ArrowDown" && selected.row < 8) {
@@ -99,9 +228,14 @@ export function SudokuGame({
         selectCell(selected.row, selected.col - 1);
       } else if (key === "ArrowRight" && selected.col < 8) {
         selectCell(selected.row, selected.col + 1);
+      } else if (key === "z" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        handleUndo();
+      } else if (key === "n" || key === "N") {
+        setNotesMode((m) => !m);
       }
     },
-    [selected, isWon, setCellValue, clearCell, selectCell]
+    [selected, isWon, handleInput, handleClear, selectCell, handleUndo]
   );
 
   useEffect(() => {
@@ -124,9 +258,7 @@ export function SudokuGame({
             onNewGame={handleNewGame}
             onRestart={restartGame}
             gameActive={hasStarted && !isWon}
-            onToggleAICoach={() => setShowAICoach(true)}
-            showAICoach={showAICoach}
-            title={isDaily ? "Daily Challenge" : "Sudoku"}
+            title={isDaily ? "Daily Challenge" : "SudoLogic"}
             subtitle={isDaily ? dailyLabel ?? "Today's puzzle" : "Classic mode"}
             lockDifficulty={isDaily}
           />
@@ -136,13 +268,31 @@ export function SudokuGame({
               board={current}
               given={given}
               selected={selected}
+              notes={notes}
               getCellStatus={getCellStatus}
               onSelect={selectCell}
             />
 
+            <div className="w-full flex gap-3">
+              <Button variant="secondary" size="md" onClick={handleUndo} className="flex-1">
+                Undo
+              </Button>
+              <Button
+                variant={notesMode ? "primary" : "secondary"}
+                size="md"
+                onClick={() => setNotesMode((m) => !m)}
+                className="flex-1"
+              >
+                Notes
+              </Button>
+              <Button variant="secondary" size="md" onClick={handleHint} disabled={hintsLeft <= 0} className="flex-1">
+                Hint ({hintsLeft})
+              </Button>
+            </div>
+
             <NumberPad
-              onInput={setCellValue}
-              onClear={clearCell}
+              onInput={handleInput}
+              onClear={handleClear}
               validMoves={selected && !given[selected.row][selected.col] ? validMoves : undefined}
               disabled={!selected || isWon || (selected && given[selected.row][selected.col])}
             />
@@ -157,15 +307,6 @@ export function SudokuGame({
         difficulty={isDaily ? "Daily" : DIFFICULTY_LABELS[difficulty]}
         onNewGame={handleNewGame}
         onClose={dismissWinModal}
-      />
-
-      <AICoach
-        isOpen={showAICoach}
-        onClose={() => setShowAICoach(false)}
-        board={current}
-        selected={selected}
-        solution={solution}
-        given={given}
       />
     </div>
   );

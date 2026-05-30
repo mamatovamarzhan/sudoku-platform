@@ -1,6 +1,6 @@
-# Sudoku — Premium Puzzle Platform
+# SudoLogic — Premium Puzzle Platform
 
-A modern multi-page Sudoku web app built with Next.js 15, TypeScript, Tailwind CSS, and the App Router.
+A modern multi-page SudoLogic web app built with Next.js 15, TypeScript, Tailwind CSS, and the App Router.
 
 ## Pages
 

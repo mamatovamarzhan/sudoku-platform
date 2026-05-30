@@ -15,8 +15,6 @@ interface GameHeaderProps {
   onNewGame: () => void;
   onRestart: () => void;
   gameActive: boolean;
-  onToggleAICoach: () => void;
-  showAICoach?: boolean;
   title?: string;
   subtitle?: string;
   lockDifficulty?: boolean;
@@ -30,9 +28,8 @@ export function GameHeader({
   onDifficultyChange,
   onNewGame,
   onRestart,
-  onToggleAICoach,
-  showAICoach = false,
-  title = "Sudoku",
+  gameActive,
+  title = "SudoLogic",
   subtitle = "Classic mode",
   lockDifficulty = false,
 }: GameHeaderProps) {
@@ -54,7 +51,7 @@ export function GameHeader({
           <DifficultySelector
             value={difficulty}
             onChange={onDifficultyChange}
-            disabled={false}
+            disabled={gameActive}
           />
         )}
         {lockDifficulty && (
@@ -64,7 +61,7 @@ export function GameHeader({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex gap-3 flex-col sm:flex-row">
         <Button variant="primary" size="md" onClick={onNewGame} className="flex-1">
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -77,21 +74,6 @@ export function GameHeader({
           </svg>
           Restart
         </Button>
-        <button
-          type="button"
-          onClick={onToggleAICoach}
-          aria-pressed={showAICoach}
-          className={`
-            flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl glass-panel
-            text-xs font-medium transition-all duration-200
-            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60
-            active:scale-[0.97]
-            text-themed-primary hover:bg-themed-glass-hover hover:border-themed-glow
-          `}
-        >
-          <span className="text-base">🤖</span>
-          AI Coach
-        </button>
       </div>
     </header>
   );

@@ -83,6 +83,8 @@ export function getCellStatus(
   const val = current[row][col];
   if (val === 0) return "empty";
   if (given[row][col]) return "given";
-  if (solution[row][col] !== val) return "error";
+  if (!isValidPlacement(current, row, col, val) || solution[row][col] !== val) {
+    return "error";
+  }
   return "user";
 }
