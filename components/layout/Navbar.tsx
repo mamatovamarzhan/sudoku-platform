@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/Button";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/game/samurai", label: "Samurai" },
+  { href: "/game/evenodd", label: "Even/Odd" },
   { href: "/daily", label: "Daily" },
   { href: "/leaderboard", label: "Leaderboard" },
   { href: "/settings", label: "Settings" },
