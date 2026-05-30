@@ -113,6 +113,7 @@ export function useSudokuGame() {
 
   const difficulty = snapshot?.difficulty ?? "medium";
   const current = snapshot?.current ?? createEmptyBoard();
+  const solution = snapshot?.solution ?? createEmptyBoard();
   const given = snapshot?.given ?? createGivenMask();
   const puzzle = snapshot?.puzzle ?? createEmptyBoard();
 
@@ -130,6 +131,7 @@ export function useSudokuGame() {
     difficulty,
     puzzle,
     current,
+    solution,
     given,
     selected,
     selectedValue,

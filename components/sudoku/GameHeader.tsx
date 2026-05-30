@@ -15,6 +15,7 @@ interface GameHeaderProps {
   onNewGame: () => void;
   onRestart: () => void;
   gameActive: boolean;
+  onToggleAICoach?: () => void;
   title?: string;
   subtitle?: string;
   lockDifficulty?: boolean;
@@ -28,6 +29,7 @@ export function GameHeader({
   onDifficultyChange,
   onNewGame,
   onRestart,
+  onToggleAICoach,
   title = "Sudoku",
   subtitle = "Classic mode",
   lockDifficulty = false,
@@ -60,7 +62,7 @@ export function GameHeader({
         )}
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <Button variant="primary" size="md" onClick={onNewGame} className="flex-1">
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -73,6 +75,11 @@ export function GameHeader({
           </svg>
           Restart
         </Button>
+        {onToggleAICoach && (
+          <Button variant="secondary" size="md" onClick={onToggleAICoach} className="flex-1">
+            AI Coach 🤖
+          </Button>
+        )}
       </div>
     </header>
   );
