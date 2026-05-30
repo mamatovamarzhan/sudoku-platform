@@ -110,7 +110,20 @@ export function Hero() {
   }, [selectedMode]);
 
   return (
-    <section className="relative overflow-hidden pt-16 pb-24 sm:pt-24 sm:pb-32">
+    <section
+      className="relative overflow-hidden pt-16 pb-24 sm:pt-24 sm:pb-32"
+      style={{
+        backgroundImage: "url('/sudoku_bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ backgroundColor: "rgba(11, 12, 30, 0.65)" }}
+        aria-hidden
+      />
       <div className="absolute inset-0 pointer-events-none" aria-hidden>
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gradient-board-glow opacity-40 blur-3xl animate-shimmer" />
         <div className="absolute top-20 right-0 w-72 h-72 rounded-full theme-orb-primary blur-3xl animate-float" />
