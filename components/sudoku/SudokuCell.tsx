@@ -13,9 +13,9 @@ interface SudokuCellProps {
   isHighlighted: boolean;
   isSameNumber: boolean;
   isGiven: boolean;
+  notes?: Set<number>;
   onSelect: (row: number, col: number) => void;
   selected: CellPosition | null;
-  notes?: Set<number>;
   className?: string;
 }
 
@@ -28,14 +28,17 @@ function SudokuCellComponent({
   isHighlighted,
   isSameNumber,
   isGiven,
-  onSelect,
   notes = new Set<number>(),
+  onSelect,
   className = "",
 }: SudokuCellProps) {
   const thickRight = col === 2 || col === 5;
   const thickBottom = row === 2 || row === 5;
   const thickLeft = col === 0 || col === 3 || col === 6;
   const thickTop = row === 0 || row === 3 || row === 6;
+
+  const noteNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const hasNotes = notes.size > 0;
 
   return (
     <button
@@ -87,17 +90,17 @@ function SudokuCellComponent({
         </span>
       )}
 
-      {value === 0 && notes.size > 0 && (
-        <span className="grid grid-cols-3 gap-0.5 w-full px-1 text-[0.45rem] sm:text-[0.55rem] leading-none text-themed-muted opacity-80">
-          {Array.from({ length: 9 }, (_, index) => {
-            const note = index + 1;
-            return (
-              <span key={note} className="h-2 sm:h-2.5 flex items-center justify-center">
-                {notes.has(note) ? note : ""}
-              </span>
-            );
-          })}
-        </span>
+      {value === 0 && hasNotes && (
+        <div className="relative z-[1] grid grid-cols-3 gap-[1px] w-full h-full p-1 text-[10px] leading-none text-themed-muted">
+          {noteNumbers.map((num) => (
+            <span
+              key={num}
+              className={`flex items-center justify-center rounded-sm transition-colors duration-200 ${notes.has(num) ? "text-themed-primary" : "text-transparent"}`}
+            >
+              {notes.has(num) ? num : " "}
+            </span>
+          ))}
+        </div>
       )}
     </button>
   );

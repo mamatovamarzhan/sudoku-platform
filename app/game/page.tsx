@@ -4,7 +4,7 @@ import { SudokuGame } from "@/components/sudoku/SudokuGame";
 
 export const metadata: Metadata = {
   title: "Play",
-  description: "Play Sudoku with real-time validation and premium themes.",
+  description: "Play SudoLogic with real-time validation and premium themes.",
 };
 
 export default function GamePage() {

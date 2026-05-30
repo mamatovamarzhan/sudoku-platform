@@ -72,7 +72,7 @@ export function Navbar() {
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-accent text-sm font-bold text-white shadow-glow-sm transition-transform group-hover:scale-105">
             S
           </span>
-          <span className="text-lg font-bold gradient-text hidden sm:block">Sudoku</span>
+          <span className="text-lg font-bold gradient-text hidden sm:block">SudoLogic</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-1" aria-label="Main">

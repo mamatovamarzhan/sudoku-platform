@@ -131,6 +131,11 @@ export function Hero() {
       </div>
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-6 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full glass-panel px-4 py-1.5 text-xs font-medium text-themed-muted mb-8 animate-fade-in">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-soft" />
+          Premium SudoLogic — Free to play
+        </div>
+
         <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-slide-up">
           <span className="gradient-text">Master the grid.</span>
           <br />
@@ -138,8 +143,7 @@ export function Hero() {
         </h1>
 
         <p className="mx-auto max-w-2xl text-lg sm:text-xl text-themed-muted mb-10 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-          A stunning Sudoku experience with three premium themes, daily challenges,
-          global leaderboards, and buttery-smooth gameplay.
+          A stunning SudoLogic experience with three premium themes, daily challenges,
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: "0.2s" }}>

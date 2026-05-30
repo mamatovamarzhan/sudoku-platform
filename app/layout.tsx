@@ -17,11 +17,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Sudoku — Premium Puzzle Platform",
-    template: "%s | Sudoku",
+    default: "SudoLogic — Premium Puzzle Platform",
+    template: "%s | SudoLogic",
   },
   description:
-    "Play premium Sudoku with stunning themes, daily challenges, and global leaderboards.",
+    "Play premium logic puzzles with stunning themes, daily challenges, and global leaderboards.",
 };
 
 export const viewport: Viewport = {

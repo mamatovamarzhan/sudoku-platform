@@ -9,6 +9,7 @@ import {
   getCellStatus,
   getValidMoves,
   isGameWon,
+  cloneBoard,
   type Board,
   type CellValue,
   type Difficulty,
@@ -56,10 +57,10 @@ export function useSudokuGame() {
 
   const setCellValue = useCallback(
     (value: CellValue) => {
-      if (!snapshot || !selected || isWon) return;
+      if (!snapshot || !selected || isWon) return false;
 
       const result = applyMove(snapshot, selected, value);
-      if (!result.accepted) return;
+      if (!result.accepted) return false;
 
       setSnapshot((prev) =>
         prev ? { ...prev, current: result.board } : prev
@@ -73,6 +74,8 @@ export function useSudokuGame() {
         setIsWon(true);
         setShowWinModal(true);
       }
+
+      return true;
     },
     [snapshot, selected, isWon]
   );
@@ -80,6 +83,18 @@ export function useSudokuGame() {
   const clearCell = useCallback(() => {
     setCellValue(0);
   }, [setCellValue]);
+
+  const restoreCurrentBoard = useCallback((board: Board) => {
+    setSnapshot((prev) =>
+      prev ? { ...prev, current: cloneBoard(board) } : prev
+    );
+  }, []);
+
+  const clearBoard = useCallback(() => {
+    setSnapshot((prev) =>
+      prev ? { ...prev, current: resetToPuzzle(prev) } : prev
+    );
+  }, []);
 
   const dismissWinModal = useCallback(() => {
     setShowWinModal(false);
@@ -148,6 +163,8 @@ export function useSudokuGame() {
     selectCell,
     setCellValue,
     clearCell,
+    restoreCurrentBoard,
+    clearBoard,
     dismissWinModal,
     getCellStatus: getStatus,
   };

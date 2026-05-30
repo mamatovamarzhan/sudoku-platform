@@ -7,6 +7,7 @@ interface SudokuBoardProps {
   board: Board;
   given: boolean[][];
   selected: CellPosition | null;
+  notes: Record<string, Set<number>>;
   getCellStatus: (row: number, col: number) => "given" | "user" | "error" | "empty";
   onSelect: (row: number, col: number) => void;
 }
@@ -15,6 +16,7 @@ export function SudokuBoard({
   board,
   given,
   selected,
+  notes,
   getCellStatus,
   onSelect,
 }: SudokuBoardProps) {
@@ -71,6 +73,7 @@ export function SudokuBoard({
                 isHighlighted={isHighlighted}
                 isSameNumber={isSameNumber}
                 isGiven={given[rowIndex][colIndex]}
+                notes={notes[`${rowIndex}-${colIndex}`] ?? new Set()}
                 onSelect={onSelect}
                 selected={selected}
               />

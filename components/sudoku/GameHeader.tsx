@@ -32,7 +32,7 @@ export function GameHeader({
   onRestart,
   onToggleAICoach,
   showAICoach = false,
-  title = "Sudoku",
+  title = "SudoLogic",
   subtitle = "Classic mode",
   lockDifficulty = false,
 }: GameHeaderProps) {
@@ -64,7 +64,7 @@ export function GameHeader({
         )}
       </div>
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex gap-3 flex-col sm:flex-row">
         <Button variant="primary" size="md" onClick={onNewGame} className="flex-1">
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
