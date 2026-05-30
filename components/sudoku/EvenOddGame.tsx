@@ -45,7 +45,7 @@ export function EvenOddGame() {
   const [gameKey, setGameKey] = useState(0);
   const [history, setHistory] = useState<Board[]>([]);
   const [notesMode, setNotesMode] = useState(false);
-  const [notes, setNotes] = useState<Record<string, CellValue[]>>({});
+  const [notes, setNotes] = useState<Record<string, Set<number>>>({});
   const [hintsLeft, setHintsLeft] = useState(MAX_HINTS);
 
   const timerActive = Boolean(snapshot) && !isWon;
@@ -125,12 +125,15 @@ export function EvenOddGame() {
     if (!selected || value === 0) return;
     const key = `${selected.row}-${selected.col}`;
     setNotes((previous) => {
-      const existing = previous[key] ?? [];
-      const nextNotes = existing.includes(value)
-        ? existing.filter((note) => note !== value)
-        : [...existing, value].sort();
+      const nextNotes = new Set(previous[key] ?? new Set<number>());
+      if (nextNotes.has(value)) {
+        nextNotes.delete(value);
+      } else {
+        nextNotes.add(value);
+      }
+
       const next = { ...previous };
-      if (nextNotes.length === 0) {
+      if (nextNotes.size === 0) {
         delete next[key];
       } else {
         next[key] = nextNotes;

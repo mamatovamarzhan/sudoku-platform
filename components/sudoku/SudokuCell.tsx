@@ -15,7 +15,7 @@ interface SudokuCellProps {
   isGiven: boolean;
   onSelect: (row: number, col: number) => void;
   selected: CellPosition | null;
-  notes?: number[];
+  notes?: Set<number>;
   className?: string;
 }
 
@@ -29,7 +29,7 @@ function SudokuCellComponent({
   isSameNumber,
   isGiven,
   onSelect,
-  notes = [],
+  notes = new Set<number>(),
   className = "",
 }: SudokuCellProps) {
   const thickRight = col === 2 || col === 5;
@@ -87,13 +87,13 @@ function SudokuCellComponent({
         </span>
       )}
 
-      {value === 0 && notes.length > 0 && (
+      {value === 0 && notes.size > 0 && (
         <span className="grid grid-cols-3 gap-0.5 w-full px-1 text-[0.45rem] sm:text-[0.55rem] leading-none text-themed-muted opacity-80">
           {Array.from({ length: 9 }, (_, index) => {
             const note = index + 1;
             return (
               <span key={note} className="h-2 sm:h-2.5 flex items-center justify-center">
-                {notes.includes(note) ? note : ""}
+                {notes.has(note) ? note : ""}
               </span>
             );
           })}
