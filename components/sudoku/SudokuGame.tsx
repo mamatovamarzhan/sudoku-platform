@@ -4,10 +4,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useSudokuGame } from "@/hooks/useSudokuGame";
 import { useTimer } from "@/hooks/useTimer";
 import { DIFFICULTY_LABELS, type Board } from "@/lib/sudoku";
-import type { CellValue, Puzzle } from "@/lib/sudoku";import { Button } from "@/components/ui/Button";import { GameHeader } from "./GameHeader";
+import type { CellValue, Puzzle } from "@/lib/sudoku";
+import { Button } from "@/components/ui/Button";
+import { GameHeader } from "./GameHeader";
 import { SudokuBoard } from "./SudokuBoard";
 import { NumberPad } from "./NumberPad";
 import { WinModal } from "./WinModal";
+import { AICoach } from "./AICoach";
 
 interface SudokuGameProps {
   initialPuzzle?: Puzzle;
@@ -56,6 +59,8 @@ export function SudokuGame({
   const timerActive = hasStarted && !isWon;
   const { formatted, reset: resetTimer, pause } = useTimer(timerActive);
   const isDaily = mode === "daily";
+
+  const [showAICoach, setShowAICoach] = useState(false);
 
   // Notes mode
   const [notesMode, setNotesMode] = useState(false);
@@ -258,6 +263,8 @@ export function SudokuGame({
             onNewGame={handleNewGame}
             onRestart={restartGame}
             gameActive={hasStarted && !isWon}
+            onToggleAICoach={() => setShowAICoach(true)}
+            showAICoach={showAICoach}
             title={isDaily ? "Daily Challenge" : "SudoLogic"}
             subtitle={isDaily ? dailyLabel ?? "Today's puzzle" : "Classic mode"}
             lockDifficulty={isDaily}
@@ -307,6 +314,15 @@ export function SudokuGame({
         difficulty={isDaily ? "Daily" : DIFFICULTY_LABELS[difficulty]}
         onNewGame={handleNewGame}
         onClose={dismissWinModal}
+      />
+
+      <AICoach
+        isOpen={showAICoach}
+        onClose={() => setShowAICoach(false)}
+        board={current}
+        selected={selected}
+        solution={solution}
+        given={given}
       />
     </div>
   );

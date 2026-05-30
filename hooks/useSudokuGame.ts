@@ -148,7 +148,6 @@ export function useSudokuGame() {
     current,
     solution,
     given,
-    solution: snapshot?.solution ?? createEmptyBoard(),
     selected,
     selectedValue,
     validMoves,

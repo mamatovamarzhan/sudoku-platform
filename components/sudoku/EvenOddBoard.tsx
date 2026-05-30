@@ -1,14 +1,14 @@
 "use client";
 
 import { SudokuCell, shouldHighlightCell } from "./SudokuCell";
-import type { Board, CellPosition, CellValue } from "@/lib/sudoku";
+import type { Board, CellPosition } from "@/lib/sudoku";
 
 interface EvenOddBoardProps {
   board: Board;
   given: boolean[][];
   evenMask: boolean[][];
   selected: CellPosition | null;
-  notes: Record<string, CellValue[]>;
+  notes: Record<string, Set<number>>;
   getCellStatus: (row: number, col: number) => "given" | "user" | "error" | "empty";
   onSelect: (row: number, col: number) => void;
 }
@@ -77,7 +77,7 @@ export function EvenOddBoard({
                 isGiven={given[rowIndex][colIndex]}
                 onSelect={onSelect}
                 selected={selected}
-                notes={notes[`${rowIndex}-${colIndex}`] ?? []}
+                notes={notes[`${rowIndex}-${colIndex}`] ?? new Set<number>()}
                 className={evenMask[rowIndex][colIndex] ? "bg-even-cell" : ""}
               />
             );

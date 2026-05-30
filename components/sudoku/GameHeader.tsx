@@ -15,6 +15,8 @@ interface GameHeaderProps {
   onNewGame: () => void;
   onRestart: () => void;
   gameActive: boolean;
+  onToggleAICoach: () => void;
+  showAICoach?: boolean;
   title?: string;
   subtitle?: string;
   lockDifficulty?: boolean;
@@ -28,7 +30,8 @@ export function GameHeader({
   onDifficultyChange,
   onNewGame,
   onRestart,
-  gameActive,
+  onToggleAICoach,
+  showAICoach = false,
   title = "SudoLogic",
   subtitle = "Classic mode",
   lockDifficulty = false,
@@ -51,7 +54,7 @@ export function GameHeader({
           <DifficultySelector
             value={difficulty}
             onChange={onDifficultyChange}
-            disabled={gameActive}
+            disabled={false}
           />
         )}
         {lockDifficulty && (
@@ -74,6 +77,21 @@ export function GameHeader({
           </svg>
           Restart
         </Button>
+        <button
+          type="button"
+          onClick={onToggleAICoach}
+          aria-pressed={showAICoach}
+          className={`
+            flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl glass-panel
+            text-xs font-medium transition-all duration-200
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60
+            active:scale-[0.97]
+            text-themed-primary hover:bg-themed-glass-hover hover:border-themed-glow
+          `}
+        >
+          <span className="text-base">🤖</span>
+          AI Coach
+        </button>
       </div>
     </header>
   );

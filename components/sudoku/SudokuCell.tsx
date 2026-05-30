@@ -13,9 +13,10 @@ interface SudokuCellProps {
   isHighlighted: boolean;
   isSameNumber: boolean;
   isGiven: boolean;
-  notes: Set<number>;
+  notes?: Set<number>;
   onSelect: (row: number, col: number) => void;
   selected: CellPosition | null;
+  className?: string;
 }
 
 function SudokuCellComponent({
@@ -27,8 +28,9 @@ function SudokuCellComponent({
   isHighlighted,
   isSameNumber,
   isGiven,
-  notes,
+  notes = new Set<number>(),
   onSelect,
+  className = "",
 }: SudokuCellProps) {
   const thickRight = col === 2 || col === 5;
   const thickBottom = row === 2 || row === 5;
@@ -54,6 +56,7 @@ function SudokuCellComponent({
         ${thickBottom ? "border-b-2 border-b-[color:var(--color-border-strong)]" : "border-b"}
         ${thickLeft ? "border-l-2 border-l-[color:var(--color-border-strong)]" : ""}
         ${thickTop ? "border-t-2 border-t-[color:var(--color-border-strong)]" : ""}
+        ${className}
         ${isSelected ? "bg-cell-selected z-[2] shadow-cell-selected animate-pulse-glow" : ""}
         ${!isSelected && isHighlighted ? "bg-cell-highlight" : ""}
         ${!isSelected && !isHighlighted && isSameNumber ? "bg-cell-same" : ""}
@@ -94,7 +97,7 @@ function SudokuCellComponent({
               key={num}
               className={`flex items-center justify-center rounded-sm transition-colors duration-200 ${notes.has(num) ? "text-themed-primary" : "text-transparent"}`}
             >
-              {notes.has(num) ? num : "\u00A0"}
+              {notes.has(num) ? num : " "}
             </span>
           ))}
         </div>
