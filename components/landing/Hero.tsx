@@ -73,6 +73,26 @@ const GAME_MODES: GameMode[] = [
   },
 ];
 
+const FREE_FEATURES = [
+  "Classic, Samurai, Even/Odd Sudoku",
+  "3 Hints per game",
+  "Notes mode",
+  "Daily Challenge",
+  "Leaderboard access",
+  "Earn 💎 Diamonds",
+];
+
+const PRO_FEATURES = [
+  "Everything in Free",
+  "Unlimited Hints per game",
+  "Exclusive Pro themes (Gold, Diamond, Midnight)",
+  "New variant: Diagonal Sudoku 🔀",
+  "New variant: Killer Sudoku 💀",
+  "Priority on Leaderboard with 👑 badge",
+  "2x Diamond multiplier",
+  "No ads ever",
+];
+
 export function Hero() {
   const [selectedMode, setSelectedMode] = useState<GameMode | null>(null);
 
@@ -167,6 +187,8 @@ export function Hero() {
           ))}
         </div>
 
+        <PricingSection />
+
         <div className="mt-16 grid grid-cols-3 gap-4 max-w-lg mx-auto animate-fade-in" style={{ animationDelay: "0.35s" }}>
           {[
             { value: "3", label: "Themes" },
@@ -188,6 +210,84 @@ export function Hero() {
         />
       )}
     </section>
+  );
+}
+
+function PricingSection() {
+  return (
+    <section id="pricing" className="mt-16 scroll-mt-28 text-left animate-slide-up" style={{ animationDelay: "0.34s" }}>
+      <div className="mx-auto max-w-3xl text-center">
+        <p className="inline-flex items-center gap-2 rounded-full glass-panel px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-themed-muted">
+          <span aria-hidden>⭐</span>
+          Premium membership
+        </p>
+        <h2 className="mt-4 text-3xl sm:text-4xl font-bold gradient-text">
+          Level Up with Pro
+        </h2>
+      </div>
+
+      <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        <article className="relative overflow-hidden glass-card-lg bg-gradient-premium p-6 sm:p-8">
+          <div className="absolute inset-0 bg-card-overlay pointer-events-none" aria-hidden />
+          <div className="relative z-[1] flex h-full flex-col">
+            <h3 className="text-2xl font-bold text-themed-primary">Free</h3>
+            <p className="mt-2 text-3xl font-bold gradient-text">$0 <span className="text-base font-medium text-themed-muted">/ forever</span></p>
+            <FeatureList features={FREE_FEATURES} />
+            <Link href="/game" className="mt-7">
+              <Button variant="secondary" size="lg" className="w-full">
+                Play Free
+              </Button>
+            </Link>
+          </div>
+        </article>
+
+        <article className="relative overflow-visible glass-card-lg bg-gradient-premium p-6 sm:p-8 border-themed-glow shadow-glow">
+          <div className="absolute -inset-px rounded-3xl border border-[color:var(--color-border-glow)] pointer-events-none" aria-hidden />
+          <div className="absolute inset-0 rounded-3xl bg-card-overlay pointer-events-none" aria-hidden />
+          <div className="relative z-[1] flex h-full flex-col pt-2">
+            <div className="text-center text-6xl drop-shadow-[0_0_22px_rgba(251,191,36,0.75)] animate-float" aria-hidden>
+              👑
+            </div>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3 text-center">
+              <h3 className="text-2xl font-bold text-themed-primary">Pro</h3>
+              <span className="rounded-full bg-accent-soft px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-accent">
+                MOST POPULAR
+              </span>
+            </div>
+            <p className="mt-2 text-center text-3xl font-bold gradient-text">$4.99 <span className="text-base font-medium text-themed-muted">/ month</span></p>
+            <FeatureList features={PRO_FEATURES} />
+            <Link
+              href="/#pricing"
+              className="btn-glow mt-7 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-3.5 bg-gradient-accent bg-[length:200%_200%] text-base font-semibold text-white border border-white/20 shadow-btn-primary animate-gradient-shift transition-all duration-300 ease-out hover:shadow-glow hover:border-white/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-surface active:scale-[0.96]"
+            >
+              Upgrade to Pro →
+            </Link>
+          </div>
+        </article>
+      </div>
+
+      <div className="mt-5 glass-panel p-5 sm:p-6 text-center">
+        <h3 className="text-xl font-bold gradient-text">How Diamonds Work 💎</h3>
+        <p className="mt-3 mx-auto max-w-3xl text-sm sm:text-base leading-7 text-themed-muted">
+          Earn diamonds by completing puzzles. Faster time and fewer mistakes = more diamonds. Spend diamonds to buy extra hints in Free mode (10 💎 = 1 hint). Pro members earn 2x diamonds and get unlimited hints.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FeatureList({ features }: { features: string[] }) {
+  return (
+    <ul className="mt-6 flex-1 space-y-3">
+      {features.map((feature) => (
+        <li key={feature} className="flex gap-3 text-sm text-themed-muted">
+          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-bold text-themed-primary">
+            ✓
+          </span>
+          <span>{feature}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 

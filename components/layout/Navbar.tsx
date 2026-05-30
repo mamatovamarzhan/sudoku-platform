@@ -124,9 +124,29 @@ export function Navbar() {
               Play Now
             </Button>
           </Link>
+          <Link href="/#pricing" className="hidden lg:block">
+            <Button
+              variant="primary"
+              size="sm"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 shadow-[0_0_18px_rgba(251,191,36,0.35)] hover:shadow-[0_0_28px_rgba(251,146,60,0.5)]"
+            >
+              <span aria-hidden>👑</span>
+              Upgrade to Pro
+            </Button>
+          </Link>
           <Link href="/game" className="sm:hidden">
             <Button variant="primary" size="sm" aria-label="Play Now">
               Play
+            </Button>
+          </Link>
+          <Link href="/#pricing" className="sm:hidden">
+            <Button
+              variant="primary"
+              size="sm"
+              aria-label="Upgrade to Pro"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500"
+            >
+              👑
             </Button>
           </Link>
         </div>
