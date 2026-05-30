@@ -1,11 +1,11 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, Suspense, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-export default function SignInPage() {
+function SignInForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -106,6 +106,25 @@ export default function SignInPage() {
             </Link>
           </p>
         </div>
+      </div>
+    </main>
+  );
+}
+
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<SignInFallback />}>
+      <SignInForm />
+    </Suspense>
+  );
+}
+
+function SignInFallback() {
+  return (
+    <main className="min-h-dvh bg-mesh px-4 py-12 sm:px-6 flex items-center justify-center">
+      <div className="w-full max-w-md glass-card-lg bg-gradient-premium p-8 text-center">
+        <p className="text-themed-muted">Loading sign in...</p>
       </div>
     </main>
   );
