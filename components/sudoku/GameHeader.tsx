@@ -28,7 +28,6 @@ export function GameHeader({
   onDifficultyChange,
   onNewGame,
   onRestart,
-  gameActive,
   title = "Sudoku",
   subtitle = "Classic mode",
   lockDifficulty = false,
@@ -51,7 +50,7 @@ export function GameHeader({
           <DifficultySelector
             value={difficulty}
             onChange={onDifficultyChange}
-            disabled={gameActive}
+            disabled={false}
           />
         )}
         {lockDifficulty && (

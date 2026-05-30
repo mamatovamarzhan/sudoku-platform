@@ -73,11 +73,9 @@ export function SudokuGame({
 
   const handleDifficultyChange = useCallback(
     (d: typeof difficulty) => {
-      if (!hasStarted || isWon) {
-        startNewGame(d);
-      }
+      startNewGame(d);
     },
-    [hasStarted, isWon, startNewGame]
+    [startNewGame]
   );
 
   const handleKeyDown = useCallback(

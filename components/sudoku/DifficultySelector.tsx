@@ -13,7 +13,6 @@ const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 export function DifficultySelector({
   value,
   onChange,
-  disabled = false,
 }: DifficultySelectorProps) {
   return (
     <div
@@ -27,7 +26,7 @@ export function DifficultySelector({
           type="button"
           role="radio"
           aria-checked={value === d}
-          disabled={disabled}
+          disabled={false}
           onClick={() => onChange(d)}
           className={`
             relative px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg
