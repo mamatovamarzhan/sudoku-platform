@@ -15,7 +15,8 @@ interface GameHeaderProps {
   onNewGame: () => void;
   onRestart: () => void;
   gameActive: boolean;
-  onToggleAICoach?: () => void;
+  onToggleAICoach: () => void;
+  showAICoach?: boolean;
   title?: string;
   subtitle?: string;
   lockDifficulty?: boolean;
@@ -30,6 +31,7 @@ export function GameHeader({
   onNewGame,
   onRestart,
   onToggleAICoach,
+  showAICoach = false,
   title = "Sudoku",
   subtitle = "Classic mode",
   lockDifficulty = false,
@@ -75,11 +77,21 @@ export function GameHeader({
           </svg>
           Restart
         </Button>
-        {onToggleAICoach && (
-          <Button variant="secondary" size="md" onClick={onToggleAICoach} className="flex-1">
-            AI Coach 🤖
-          </Button>
-        )}
+        <button
+          type="button"
+          onClick={onToggleAICoach}
+          aria-pressed={showAICoach}
+          className={`
+            flex-1 flex flex-col items-center gap-1 py-2.5 rounded-xl glass-panel
+            text-xs font-medium transition-all duration-200
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60
+            active:scale-[0.97]
+            text-themed-primary hover:bg-themed-glass-hover hover:border-themed-glow
+          `}
+        >
+          <span className="text-base">🤖</span>
+          AI Coach
+        </button>
       </div>
     </header>
   );

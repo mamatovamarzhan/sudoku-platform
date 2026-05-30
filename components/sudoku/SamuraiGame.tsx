@@ -24,6 +24,7 @@ import { GameHeader } from "./GameHeader";
 import { NumberPad } from "./NumberPad";
 import { SamuraiBoard } from "./SamuraiBoard";
 import { WinModal } from "./WinModal";
+import { AICoach } from "./AICoach";
 
 interface SamuraiSnapshot {
   puzzle: SamuraiBoardData;
@@ -41,6 +42,7 @@ export function SamuraiGame() {
   const [mistakes, setMistakes] = useState(0);
   const [isWon, setIsWon] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
+  const [showAICoach, setShowAICoach] = useState(false);
   const [gameKey, setGameKey] = useState(0);
   const [history, setHistory] = useState<SamuraiBoardData[]>([]);
   const [notesMode, setNotesMode] = useState(false);
@@ -295,6 +297,8 @@ export function SamuraiGame() {
             onNewGame={() => startNewGame(difficulty)}
             onRestart={restartGame}
             gameActive={false}
+            onToggleAICoach={() => setShowAICoach(true)}
+            showAICoach={showAICoach}
             title="Samurai Sudoku"
             subtitle="Five linked grids in one overlapping challenge"
           />
@@ -340,8 +344,21 @@ export function SamuraiGame() {
         onNewGame={() => startNewGame(difficulty)}
         onClose={() => setShowWinModal(false)}
       />
+
+      <AICoach
+        isOpen={showAICoach}
+        onClose={() => setShowAICoach(false)}
+        board={toCoachBoard(current)}
+        selected={selected}
+        solution={toCoachBoard(snapshot?.solution ?? createEmptySamuraiBoard())}
+        given={given}
+      />
     </div>
   );
+}
+
+function toCoachBoard(board: SamuraiBoardData): number[][] {
+  return board.map((row) => row.map((cell) => cell ?? 0));
 }
 
 function VariantControls({

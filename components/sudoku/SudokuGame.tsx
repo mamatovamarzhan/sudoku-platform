@@ -125,6 +125,7 @@ export function SudokuGame({
             onRestart={restartGame}
             gameActive={hasStarted && !isWon}
             onToggleAICoach={() => setShowAICoach(true)}
+            showAICoach={showAICoach}
             title={isDaily ? "Daily Challenge" : "Sudoku"}
             subtitle={isDaily ? dailyLabel ?? "Today's puzzle" : "Classic mode"}
             lockDifficulty={isDaily}

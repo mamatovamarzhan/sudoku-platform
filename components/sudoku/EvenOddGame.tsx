@@ -22,6 +22,7 @@ import { GameHeader } from "./GameHeader";
 import { EvenOddBoard } from "./EvenOddBoard";
 import { NumberPad } from "./NumberPad";
 import { WinModal } from "./WinModal";
+import { AICoach } from "./AICoach";
 
 interface EvenOddSnapshot {
   puzzle: Board;
@@ -40,6 +41,7 @@ export function EvenOddGame() {
   const [mistakes, setMistakes] = useState(0);
   const [isWon, setIsWon] = useState(false);
   const [showWinModal, setShowWinModal] = useState(false);
+  const [showAICoach, setShowAICoach] = useState(false);
   const [gameKey, setGameKey] = useState(0);
   const [history, setHistory] = useState<Board[]>([]);
   const [notesMode, setNotesMode] = useState(false);
@@ -286,6 +288,8 @@ export function EvenOddGame() {
             onNewGame={() => startNewGame(difficulty)}
             onRestart={restartGame}
             gameActive={false}
+            onToggleAICoach={() => setShowAICoach(true)}
+            showAICoach={showAICoach}
             title="Even/Odd Sudoku"
             subtitle="Even cells are shaded; white cells are odd"
           />
@@ -327,6 +331,15 @@ export function EvenOddGame() {
         difficulty={DIFFICULTY_LABELS[difficulty]}
         onNewGame={() => startNewGame(difficulty)}
         onClose={() => setShowWinModal(false)}
+      />
+
+      <AICoach
+        isOpen={showAICoach}
+        onClose={() => setShowAICoach(false)}
+        board={current}
+        selected={selected}
+        solution={snapshot?.solution ?? createEmptyBoard()}
+        given={given}
       />
     </div>
   );
