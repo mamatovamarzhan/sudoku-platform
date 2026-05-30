@@ -23,33 +23,46 @@ function createPuzzleFromSolution(
   difficulty: Difficulty,
   random: () => number = Math.random
 ): Board {
-  const puzzle = cloneBoard(solution);
   const targetClues = getTargetClues(difficulty, random);
   const cellsToRemove = 81 - targetClues;
+  const attempts = difficulty === "hard" ? 8 : difficulty === "medium" ? 4 : 2;
+  let bestPuzzle = cloneBoard(solution);
+  let bestClueCount = 81;
 
-  const positions = shuffle(
-    Array.from({ length: 81 }, (_, i) => ({
-      row: Math.floor(i / 9),
-      col: i % 9,
-    })),
-    random
-  );
+  for (let attempt = 0; attempt < attempts; attempt++) {
+    const puzzle = cloneBoard(solution);
+    const positions = shuffle(
+      Array.from({ length: 81 }, (_, i) => ({
+        row: Math.floor(i / 9),
+        col: i % 9,
+      })),
+      random
+    );
 
-  let removed = 0;
-  for (const { row, col } of positions) {
-    if (removed >= cellsToRemove) break;
+    let removed = 0;
+    for (const { row, col } of positions) {
+      if (removed >= cellsToRemove) break;
 
-    const backup = puzzle[row][col];
-    puzzle[row][col] = 0;
+      const backup = puzzle[row][col];
+      puzzle[row][col] = 0;
 
-    if (hasUniqueSolution(puzzle)) {
-      removed++;
-    } else {
-      puzzle[row][col] = backup;
+      if (hasUniqueSolution(puzzle)) {
+        removed++;
+      } else {
+        puzzle[row][col] = backup;
+      }
     }
+
+    const clueCount = 81 - removed;
+    if (clueCount < bestClueCount) {
+      bestPuzzle = puzzle;
+      bestClueCount = clueCount;
+    }
+
+    if (removed >= cellsToRemove) return puzzle;
   }
 
-  return puzzle;
+  return bestPuzzle;
 }
 
 export function generatePuzzle(difficulty: Difficulty): Puzzle {
