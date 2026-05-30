@@ -11,11 +11,13 @@ export default function SignUpPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+    setSuccess("");
 
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
@@ -23,10 +25,26 @@ export default function SignUpPage() {
     }
 
     setIsLoading(true);
-    window.setTimeout(() => {
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error ?? "Unable to create account.");
+        return;
+      }
+
+      setSuccess("Account created! Redirecting to sign in...");
+      window.setTimeout(() => router.push("/auth/signin"), 900);
+    } catch (error) {
+      setError("Unable to create account right now.");
+    } finally {
       setIsLoading(false);
-      router.push("/auth/signin");
-    }, 500);
+    }
   };
 
   return (
@@ -102,6 +120,12 @@ export default function SignUpPage() {
             {error && (
               <p className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-sm text-rose-300">
                 {error}
+              </p>
+            )}
+
+            {success && (
+              <p className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+                {success}
               </p>
             )}
 

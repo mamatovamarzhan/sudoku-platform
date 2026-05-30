@@ -33,7 +33,7 @@ function SignInForm() {
     setIsLoading(false);
 
     if (result?.error) {
-      setError("Invalid email or password. Try test@test.com / password123.");
+      setError("Invalid email or password");
       return;
     }
 
@@ -68,7 +68,7 @@ function SignInForm() {
                 onChange={(event) => setEmail(event.target.value)}
                 required
                 className="mt-2 w-full glass-panel px-4 py-3 text-sm text-themed-primary placeholder:text-themed-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-                placeholder="test@test.com"
+                placeholder="you@example.com"
               />
             </label>
 
@@ -80,7 +80,7 @@ function SignInForm() {
                 onChange={(event) => setPassword(event.target.value)}
                 required
                 className="mt-2 w-full glass-panel px-4 py-3 text-sm text-themed-primary placeholder:text-themed-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-                placeholder="password123"
+                placeholder="Your password"
               />
             </label>
 

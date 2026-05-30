@@ -1,5 +1,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { findUserByEmail } from "@/lib/users";
 
 const handler = NextAuth({
   providers: [
@@ -10,15 +12,17 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // For demo: hardcoded users (replace with DB later)
-        const users = [
-          { id: "1", email: "test@test.com", password: "password123", name: "Player" },
-        ];
-        const user = users.find((u) => u.email === credentials?.email);
-        if (user && user.password === credentials?.password) {
-          return { id: user.id, email: user.email, name: user.name };
-        }
-        return null;
+        const email = credentials?.email;
+        const password = credentials?.password;
+        if (!email || !password) return null;
+
+        const user = await findUserByEmail(email);
+        if (!user) return null;
+
+        const passwordMatches = await bcrypt.compare(password, user.passwordHash);
+        if (!passwordMatches) return null;
+
+        return { id: user.id, email: user.email, name: user.name };
       },
     }),
   ],
