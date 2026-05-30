@@ -88,7 +88,7 @@ function SudokuCellComponent({
       )}
 
       {value === 0 && notes.length > 0 && (
-        <span className="grid grid-cols-3 gap-0.5 w-full px-1 text-[0.45rem] sm:text-[0.55rem] leading-none text-themed-muted/80">
+        <span className="grid grid-cols-3 gap-0.5 w-full px-1 text-[0.45rem] sm:text-[0.55rem] leading-none text-themed-muted opacity-80">
           {Array.from({ length: 9 }, (_, index) => {
             const note = index + 1;
             return (

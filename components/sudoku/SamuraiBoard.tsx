@@ -126,7 +126,7 @@ export function SamuraiBoard({
 
                 {(value === 0 || value === null) &&
                   (notes[`${rowIndex}-${colIndex}`]?.length ?? 0) > 0 && (
-                    <span className="grid grid-cols-3 gap-px w-full px-0.5 text-[0.35rem] sm:text-[0.42rem] leading-none text-themed-muted/80">
+                    <span className="grid grid-cols-3 gap-px w-full px-0.5 text-[0.35rem] sm:text-[0.42rem] leading-none text-themed-muted opacity-80">
                       {Array.from({ length: 9 }, (_, index) => {
                         const note = index + 1;
                         return (
