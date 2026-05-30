@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 import { ThemeSwitcher } from "@/components/theme/ThemeSwitcher";
 import { Button } from "@/components/ui/Button";
 
@@ -37,7 +38,9 @@ const PLAY_LINKS = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const { data: session, status } = useSession();
   const [playOpen, setPlayOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const playActive =
     pathname === "/game" ||
@@ -51,6 +54,7 @@ export function Navbar() {
         !headerRef.current.contains(event.target as Node)
       ) {
         setPlayOpen(false);
+        setUserOpen(false);
       }
     }
 
@@ -150,6 +154,21 @@ export function Navbar() {
               👑
             </Button>
           </Link>
+          {status !== "loading" && !session?.user && (
+            <Link href="/auth/signin" className="hidden sm:block">
+              <Button variant="secondary" size="sm">
+                Sign In
+              </Button>
+            </Link>
+          )}
+          {session?.user && (
+            <UserMenu
+              name={session.user.name ?? session.user.email ?? "Player"}
+              isOpen={userOpen}
+              onToggle={() => setUserOpen((open) => !open)}
+              onClose={() => setUserOpen(false)}
+            />
+          )}
         </div>
       </div>
 
@@ -186,6 +205,62 @@ export function Navbar() {
         </div>
       )}
     </header>
+  );
+}
+
+function UserMenu({
+  name,
+  isOpen,
+  onToggle,
+  onClose,
+}: {
+  name: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}) {
+  const initial = name.trim().charAt(0).toUpperCase() || "P";
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-accent text-sm font-bold text-white shadow-glow-sm transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+      >
+        {initial}
+      </button>
+
+      {isOpen && (
+        <div
+          className="absolute right-0 top-full mt-2 w-48 glass-panel p-2 shadow-glass-lg animate-fade-in"
+          role="menu"
+          aria-label="User menu"
+        >
+          <div className="px-3 py-2 text-xs text-themed-muted border-b border-[color:var(--color-glass-border)]">
+            Signed in as <span className="font-semibold text-themed-primary">{name}</span>
+          </div>
+          <Link
+            href="/settings"
+            onClick={onClose}
+            className="mt-2 block rounded-xl px-3 py-2 text-sm text-themed-muted transition-colors hover:bg-themed-glass-hover hover:text-themed-primary"
+            role="menuitem"
+          >
+            Profile
+          </Link>
+          <button
+            type="button"
+            onClick={() => void signOut({ callbackUrl: "/" })}
+            className="block w-full rounded-xl px-3 py-2 text-left text-sm text-themed-muted transition-colors hover:bg-themed-glass-hover hover:text-themed-primary"
+            role="menuitem"
+          >
+            Sign Out
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
