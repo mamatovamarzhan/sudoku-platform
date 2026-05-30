@@ -8,7 +8,7 @@ SudoLogic is a premium Sudoku platform for puzzle lovers who want more than a ba
 
 ## Who is it for?
 
-Puzzle enthusiasts of all levels — from beginners learning Sudoku to advanced players who want a daily mental challenge.
+Puzzle enthusiasts of all levels from beginners learning Sudoku to advanced players who want a daily mental challenge.
 
 ## Pages
 
