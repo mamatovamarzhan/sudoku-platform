@@ -1,10 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+function getSupabase() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY;
+  if (!url || !key) throw new Error("Supabase env vars missing");
+  return createClient(url, key);
+}
 
 export interface StoredUser {
   id: string;
@@ -18,7 +20,7 @@ export function normalizeEmail(email: string): string {
 }
 
 export async function findUserByEmail(email: string): Promise<StoredUser | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("users")
     .select("*")
     .eq("email", normalizeEmail(email))
@@ -28,7 +30,7 @@ export async function findUserByEmail(email: string): Promise<StoredUser | null>
 }
 
 export async function readUsers(): Promise<StoredUser[]> {
-  const { data, error } = await supabase.from("users").select("*");
+  const { data, error } = await getSupabase().from("users").select("*");
   if (error || !data) return [];
   return data as StoredUser[];
 }
@@ -41,7 +43,7 @@ export async function createUser(
   password: string
 ): Promise<StoredUser> {
   const passwordHash = await bcrypt.hash(password, 10);
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from("users")
     .insert([{
       id: crypto.randomUUID(),
