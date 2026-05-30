@@ -5,3 +5,5 @@ export * from "./game";
 export * from "./solver";
 export * from "./validator";
 export * from "./utils";
+export * from "./evenodd";
+export * from "./samurai";

@@ -320,6 +320,10 @@
     background-color: var(--color-glass-bg);
   }
 
+  .bg-even-cell {
+    background-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
   .theme-orb-primary {
     background-color: var(--orb-primary);
   }

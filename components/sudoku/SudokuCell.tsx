@@ -15,6 +15,8 @@ interface SudokuCellProps {
   isGiven: boolean;
   onSelect: (row: number, col: number) => void;
   selected: CellPosition | null;
+  notes?: number[];
+  className?: string;
 }
 
 function SudokuCellComponent({
@@ -27,6 +29,8 @@ function SudokuCellComponent({
   isSameNumber,
   isGiven,
   onSelect,
+  notes = [],
+  className = "",
 }: SudokuCellProps) {
   const thickRight = col === 2 || col === 5;
   const thickBottom = row === 2 || row === 5;
@@ -49,6 +53,7 @@ function SudokuCellComponent({
         ${thickBottom ? "border-b-2 border-b-[color:var(--color-border-strong)]" : "border-b"}
         ${thickLeft ? "border-l-2 border-l-[color:var(--color-border-strong)]" : ""}
         ${thickTop ? "border-t-2 border-t-[color:var(--color-border-strong)]" : ""}
+        ${className}
         ${isSelected ? "bg-cell-selected z-[2] shadow-cell-selected animate-pulse-glow" : ""}
         ${!isSelected && isHighlighted ? "bg-cell-highlight" : ""}
         ${!isSelected && !isHighlighted && isSameNumber ? "bg-cell-same" : ""}
@@ -79,6 +84,19 @@ function SudokuCellComponent({
           `}
         >
           {value}
+        </span>
+      )}
+
+      {value === 0 && notes.length > 0 && (
+        <span className="grid grid-cols-3 gap-0.5 w-full px-1 text-[0.45rem] sm:text-[0.55rem] leading-none text-themed-muted opacity-80">
+          {Array.from({ length: 9 }, (_, index) => {
+            const note = index + 1;
+            return (
+              <span key={note} className="h-2 sm:h-2.5 flex items-center justify-center">
+                {notes.includes(note) ? note : ""}
+              </span>
+            );
+          })}
         </span>
       )}
     </button>
