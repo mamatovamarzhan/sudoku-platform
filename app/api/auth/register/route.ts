@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { findUserByEmail, normalizeEmail, readUsers, writeUsers } from "@/lib/users";
+import { findUserByEmail, normalizeEmail, createUser } from "@/lib/users";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,18 +32,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const users = await readUsers();
-    const passwordHash = await bcrypt.hash(password, 10);
-    users.push({
-      id: crypto.randomUUID(),
-      name: name.trim(),
-      email: normalizedEmail,
-      passwordHash,
-    });
-    await writeUsers(users);
-
+    await createUser(name, email, password);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Register error:", error);
     return NextResponse.json(
       { error: "Unable to create account right now." },
       { status: 500 }

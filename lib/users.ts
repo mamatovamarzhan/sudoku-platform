@@ -1,5 +1,10 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
+import bcrypt from "bcryptjs";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export interface StoredUser {
   id: string;
@@ -8,32 +13,44 @@ export interface StoredUser {
   passwordHash: string;
 }
 
-const usersFilePath = path.join(process.cwd(), "lib", "users.json");
-
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-export async function readUsers(): Promise<StoredUser[]> {
-  try {
-    const contents = await fs.readFile(usersFilePath, "utf8");
-    const parsed = JSON.parse(contents) as StoredUser[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
-      return [];
-    }
-    throw error;
-  }
-}
-
-export async function writeUsers(users: StoredUser[]): Promise<void> {
-  await fs.writeFile(usersFilePath, `${JSON.stringify(users, null, 2)}
-`, "utf8");
-}
-
 export async function findUserByEmail(email: string): Promise<StoredUser | null> {
-  const normalizedEmail = normalizeEmail(email);
-  const users = await readUsers();
-  return users.find((user) => normalizeEmail(user.email) === normalizedEmail) ?? null;
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", normalizeEmail(email))
+    .single();
+  if (error || !data) return null;
+  return data as StoredUser;
+}
+
+export async function readUsers(): Promise<StoredUser[]> {
+  const { data, error } = await supabase.from("users").select("*");
+  if (error || !data) return [];
+  return data as StoredUser[];
+}
+
+export async function writeUsers(users: StoredUser[]): Promise<void> {}
+
+export async function createUser(
+  name: string,
+  email: string,
+  password: string
+): Promise<StoredUser> {
+  const passwordHash = await bcrypt.hash(password, 10);
+  const { data, error } = await supabase
+    .from("users")
+    .insert([{
+      id: crypto.randomUUID(),
+      name: name.trim(),
+      email: normalizeEmail(email),
+      passwordHash
+    }])
+    .select()
+    .single();
+  if (error) throw new Error(error.message);
+  return data as StoredUser;
 }
