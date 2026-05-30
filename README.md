@@ -22,10 +22,10 @@ Puzzle enthusiasts of all levels — from beginners learning Sudoku to advanced 
 
 ## Features
 
-- 🤖 **AI Coach** — Smart hints and explanations powered by Gemini AI
-- 🎨 **3 Premium Themes** — Neon Cyberpunk, Ocean, Emerald Luxury
-- 📅 **Daily Challenges** — A new puzzle every day
-- 🏆 **Leaderboard** — Compete with other players globally
+- 🤖 **AI Coach**  Smart hints and explanations powered by Gemini AI
+- 🎨 **3 Premium Themes**  Neon Cyberpunk, Ocean, Emerald Luxury
+- 📅 **Daily Challenges**  A new puzzle every day
+- 🏆 **Leaderboard**  Compete with other players globally
 - Full Sudoku engine: generation, validation, difficulty levels
 - Responsive layout with navbar, footer, and mobile navigation
 - Theme persistence via localStorage
